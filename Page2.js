@@ -1,3 +1,4 @@
+import './index.css';
 import React, { useState } from 'react';
 
 function Page2({ setPage }) {
@@ -30,7 +31,7 @@ function Page2({ setPage }) {
           maxLength={4}
         />
       </label>
-      {error && <div style={{ color: 'red' }}>{error}</div>}
+      {error && <div className="error">{error}</div>}
       <button type="submit">Continue</button>
     </form>
   );

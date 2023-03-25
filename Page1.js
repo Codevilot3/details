@@ -1,40 +1,57 @@
 import React, { useState } from 'react';
 
-function Page1({ setPage, setUserData }) {
-  const [inputValue, setInputValue] = useState('');
-  const [error, setError] = useState('');
+function Page1({ setPage, handleUserData }) {
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [phoneError, setPhoneError] = useState('');
 
-  const handleInputChange = (e) => {
-    setInputValue(e.target.value);
-    setError('');
+  const validateEmail = (email) => {
+    // Email validation regex pattern
+    const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return pattern.test(email);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!/^\d{10}$/.test(inputValue) && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(inputValue)) {
-      setError('Invalid input format');
+  const validatePhone = (phone) => {
+    // Phone number validation regex pattern
+    const pattern = /^[0-9]{10}$/;
+    return pattern.test(phone);
+  };
+
+  const handleNext = () => {
+    let isValid = true;
+    if (!validateEmail(email)) {
+      setEmailError('Please enter a valid email');
+      isValid = false;
     } else {
-      // Set the user data
-      setUserData(inputValue);
-      // Move to the next page
+      setEmailError('');
+    }
+    if (!validatePhone(phone)) {
+      setPhoneError('Please enter a valid phone number');
+      isValid = false;
+    } else {
+      setPhoneError('');
+    }
+    if (isValid) {
+      handleUserData(`${email},${phone}`);
       setPage(2);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label>
-        Mobile Number/Email:
-        <input
-          type="text"
-          value={inputValue}
-          onChange={handleInputChange}
-          maxLength={50}
-        />
-      </label>
-      {error && <div style={{ color: 'red' }}>{error}</div>}
-      <button type="submit">Continue</button>
-    </form>
+    <div className="container">
+      <form>
+        <label htmlFor="email">Email:</label>
+        <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+        {emailError && <div className="error">{emailError}</div>}
+        <label htmlFor="phone">Phone Number:</label>
+        <input type="tel" id="phone" value={phone} onChange={(e) => setPhone(e.target.value)} />
+        {phoneError && <div className="error">{phoneError}</div>}
+        <button type="button" onClick={handleNext}>
+          Next
+        </button>
+      </form>
+    </div>
   );
 }
 
